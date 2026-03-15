@@ -25,6 +25,8 @@ jobs:
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YT_COOKIE: ${{ secrets.YT_COOKIE }}
         run: |
-          # Usiamo 'python -m' per essere sicuri che GitHub trovi lo script
-          python -m spotify_to_ytmusic setup --no-auth
-          python -m spotify_to_ytmusic sync all
+          # 1. Creiamo il file delle impostazioni (settings.ini) al volo
+          printf "[spotify]\nclient_id=$SPOTIFY_CLIENT_ID\nclient_secret=$SPOTIFY_CLIENT_SECRET\n\n[youtube]\nheaders_raw=$YT_COOKIE" > settings.ini
+          
+          # 2. Eseguiamo la sincronizzazione usando l'eseguibile installato
+          spotify_to_ytmusic sync all

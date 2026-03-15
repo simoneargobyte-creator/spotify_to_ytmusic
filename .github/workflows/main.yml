@@ -25,7 +25,7 @@ jobs:
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YT_COOKIE: ${{ secrets.YT_COOKIE }}
         run: |
-          # Creiamo il file settings.ini usando un metodo sicuro per le stringhe speciali
+          # 1. Creiamo il file settings.ini
           cat <<EOF > settings.ini
           [spotify]
           client_id = $SPOTIFY_CLIENT_ID
@@ -35,5 +35,5 @@ jobs:
           headers_raw = $YT_COOKIE
           EOF
           
-          # Lanciamo la sincronizzazione
-          spotify_to_ytmusic sync all
+          # 2. Lanciamo il comando corretto (all) usando python -m
+          python3 -m spotify_to_ytmusic all

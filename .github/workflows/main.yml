@@ -21,10 +21,10 @@ jobs:
 
       - name: Run sync
         env:
-          # Qui GitHub pescherà i codici che hai salvato nei Secrets
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YT_COOKIE: ${{ secrets.YT_COOKIE }}
         run: |
-          # Questo comando sincronizza tutte le tue playlist
-          spotify-to-ytmusic sync all
+          # Usiamo 'python -m' per essere sicuri che GitHub trovi lo script
+          python -m spotify_to_ytmusic setup --no-auth
+          python -m spotify_to_ytmusic sync all

@@ -1,0 +1,30 @@
+name: Sync Spotify to YT Music
+on:
+  schedule:
+    - cron: '0 * * * *' # Gira ogni notte alle 02:00
+  workflow_dispatch: # Ti permette di avviarlo a mano quando vuoi
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install spotify-to-ytmusic
+
+      - name: Run sync
+        env:
+          # Qui GitHub pescherà i codici che hai salvato nei Secrets
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          YT_COOKIE: ${{ secrets.YT_COOKIE }}
+        run: |
+          # Questo comando sincronizza tutte le tue playlist
+          spotify-to-ytmusic sync all

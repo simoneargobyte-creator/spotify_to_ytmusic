@@ -25,7 +25,7 @@ jobs:
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YT_COOKIE: ${{ secrets.YT_COOKIE }}
         run: |
-          # 1. Creiamo il file settings.ini
+          # 1. Creazione file impostazioni
           cat <<EOF > settings.ini
           [spotify]
           client_id = $SPOTIFY_CLIENT_ID
@@ -35,6 +35,6 @@ jobs:
           headers_raw = $YT_COOKIE
           EOF
           
-          # 2. Aggiungiamo la cartella degli script al PATH e lanciamo il comando
+          # 2. Avvio sincronizzazione usando 'me' come ID
           export PATH=$PATH:/home/runner/.local/bin
-          spotify_to_ytmusic all
+          spotify_to_ytmusic all me

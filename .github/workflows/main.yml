@@ -21,14 +21,12 @@ jobs:
 
       - name: Sync Liked Songs
         run: |
-          # 1. Setup delle credenziali Spotify (usando python -m)
+          # 1. Setup Spotify
           python3 -m spotify2ytmusic.cli setup --id "${{ secrets.SPOTIFY_CLIENT_ID }}" --secret "${{ secrets.SPOTIFY_CLIENT_SECRET }}"
           
-          # 2. Creazione del file per YouTube Music
+          # 2. Creazione file cookie (usiamo il formato corretto per questa libreria)
           echo '${{ secrets.YT_COOKIE }}' > headers.json
           
-          # 3. Sincronizza i "Mi piace"
-          python3 -m spotify2ytmusic.cli liked
-          
-          # 4. Sincronizza le playlist
+          # 3. Test di connessione: proviamo a vedere se lo script "vede" le playlist
+          echo "Verifica playlist in corso..."
           python3 -m spotify2ytmusic.cli playlists

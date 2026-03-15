@@ -21,11 +21,10 @@ jobs:
 
       - name: Run sync
         run: |
-          # 1. Aggiungiamo il percorso agli eseguibili
-          export PATH=$PATH:/home/runner/.local/bin
-          
-          # 2. Creiamo il file settings.ini esattamente dove lo vuole lo script
-          # Usiamo le virgolette singole per i segreti per evitare errori con i caratteri speciali
+          # 1. Ci spostiamo nella cartella dove GitHub lavora
+          cd $GITHUB_WORKSPACE
+
+          # 2. CREIAMO IL FILE settings.ini (Questo risolve l'errore che vedevi)
           cat <<EOF > settings.ini
           [spotify]
           client_id = ${{ secrets.SPOTIFY_CLIENT_ID }}
@@ -35,5 +34,6 @@ jobs:
           headers_raw = ${{ secrets.YT_COOKIE }}
           EOF
           
-          # 3. Lanciamo la sincronizzazione puntando al file che abbiamo appena creato
+          # 3. Diciamo al sistema dove sono i comandi e lanciamo la sincronizzazione
+          export PATH=$PATH:/home/runner/.local/bin
           spotify_to_ytmusic all me

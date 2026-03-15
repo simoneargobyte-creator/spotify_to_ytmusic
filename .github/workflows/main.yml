@@ -21,11 +21,8 @@ jobs:
 
       - name: Run sync
         run: |
-          # 1. Troviamo dove è installata la libreria
-          LIB_PATH=$(python -c "import spotify_to_ytmusic; import os; print(os.path.dirname(spotify_to_ytmusic.__file__))")
-          
-          # 2. Creiamo il file settings.ini ESATTAMENTE dove lo script lo vuole (come visto dall'errore)
-          cat <<EOF > "$LIB_PATH/settings.ini"
+          # 1. Creiamo il file nella cartella corrente (dove abbiamo i permessi)
+          cat <<EOF > my_settings.ini
           [spotify]
           client_id = ${{ secrets.SPOTIFY_CLIENT_ID }}
           client_secret = ${{ secrets.SPOTIFY_CLIENT_SECRET }}
@@ -34,6 +31,9 @@ jobs:
           headers_raw = ${{ secrets.YT_COOKIE }}
           EOF
           
-          # 3. Lanciamo la sincronizzazione
+          # 2. Esportiamo il percorso del file così lo script lo trova subito
+          export SPOTIFY_TO_YT_CONFIG=$(pwd)/my_settings.ini
           export PATH=$PATH:/home/runner/.local/bin
+
+          # 3. Lanciamo il comando
           spotify_to_ytmusic all me

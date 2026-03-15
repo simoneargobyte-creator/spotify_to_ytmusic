@@ -35,5 +35,6 @@ jobs:
           headers_raw = $YT_COOKIE
           EOF
           
-          # 2. Lanciamo il comando corretto (all) usando python -m
-          python3 -m spotify_to_ytmusic all
+          # 2. Aggiungiamo la cartella degli script al PATH e lanciamo il comando
+          export PATH=$PATH:/home/runner/.local/bin
+          spotify_to_ytmusic all

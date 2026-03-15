@@ -24,13 +24,10 @@ jobs:
           # 1. Setup Spotify
           python3 -m spotify2ytmusic.cli setup --id "${{ secrets.SPOTIFY_CLIENT_ID }}" --secret "${{ secrets.SPOTIFY_CLIENT_SECRET }}"
           
-          # 2. Creazione file cookie (fondamentale che sia headers.json)
+          # 2. Creazione file cookie
           echo '${{ secrets.YT_COOKIE }}' > headers.json
           
-          # 3. TEST: Chiediamo allo script di ELENCARE le tue playlist di Spotify
-          echo "Verifica connessione Spotify..."
+          # 3. TEST CRUCIALE: Elenca gli ID delle tue playlist
+          echo "--- ELENCO PLAYLIST RILEVATE ---"
           python3 -m spotify2ytmusic.cli list
-          
-          # 4. TEST: Chiediamo allo script di mostrare i primi brani dei 'Mi piace'
-          echo "Verifica accesso YouTube Music..."
-          python3 -m spotify2ytmusic.cli liked
+          echo "-------------------------------"

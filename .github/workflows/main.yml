@@ -25,8 +25,15 @@ jobs:
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YT_COOKIE: ${{ secrets.YT_COOKIE }}
         run: |
-          # 1. Creiamo il file delle impostazioni (settings.ini) al volo
-          printf "[spotify]\nclient_id=$SPOTIFY_CLIENT_ID\nclient_secret=$SPOTIFY_CLIENT_SECRET\n\n[youtube]\nheaders_raw=$YT_COOKIE" > settings.ini
+          # Creiamo il file settings.ini usando un metodo sicuro per le stringhe speciali
+          cat <<EOF > settings.ini
+          [spotify]
+          client_id = $SPOTIFY_CLIENT_ID
+          client_secret = $SPOTIFY_CLIENT_SECRET
+
+          [youtube]
+          headers_raw = $YT_COOKIE
+          EOF
           
-          # 2. Eseguiamo la sincronizzazione usando l'eseguibile installato
+          # Lanciamo la sincronizzazione
           spotify_to_ytmusic sync all

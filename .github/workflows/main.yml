@@ -25,16 +25,11 @@ jobs:
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YT_COOKIE: ${{ secrets.YT_COOKIE }}
         run: |
-          # 1. Creazione file impostazioni
-          cat <<EOF > settings.ini
-          [spotify]
-          client_id = $SPOTIFY_CLIENT_ID
-          client_secret = $SPOTIFY_CLIENT_SECRET
-
-          [youtube]
-          headers_raw = $YT_COOKIE
-          EOF
-          
-          # 2. Avvio sincronizzazione usando 'me' come ID
+          # 1. Aggiungiamo il percorso agli eseguibili
           export PATH=$PATH:/home/runner/.local/bin
+          
+          # 2. Setup automatico usando le variabili d'ambiente
+          spotify_to_ytmusic setup --id "$SPOTIFY_CLIENT_ID" --secret "$SPOTIFY_CLIENT_SECRET" --cookie "$YT_COOKIE"
+          
+          # 3. Lanciamo la sincronizzazione usando 'me' come ID
           spotify_to_ytmusic all me

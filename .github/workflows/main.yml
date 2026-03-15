@@ -1,39 +1,32 @@
 name: Sync Spotify to YT Music
 on:
   schedule:
-    - cron: '0 * * * *' # Gira ogni notte alle 02:00
-  workflow_dispatch: # Ti permette di avviarlo a mano quando vuoi
+    - cron: '0 * * * *' # Gira ogni ora
+  workflow_dispatch: # Avvio manuale
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
-      - name: Install dependencies
-        run: pip install spotify-to-ytmusic
+      - name: Install Tool
+        run: pip install spotify2ytmusic
 
-      - name: Run sync
+      - name: Sync Liked Songs
         run: |
-          # 1. Creiamo il file nella cartella corrente (dove abbiamo i permessi)
-          cat <<EOF > my_settings.ini
-          [spotify]
-          client_id = ${{ secrets.SPOTIFY_CLIENT_ID }}
-          client_secret = ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-
-          [youtube]
-          headers_raw = ${{ secrets.YT_COOKIE }}
-          EOF
+          # Sincronizza i brani che ti piacciono
+          spotify2ytmusic setup --id "${{ secrets.SPOTIFY_CLIENT_ID }}" --secret "${{ secrets.SPOTIFY_CLIENT_SECRET }}"
+          echo "${{ secrets.YT_COOKIE }}" > headers.json
           
-          # 2. Esportiamo il percorso del file così lo script lo trova subito
-          export SPOTIFY_TO_YT_CONFIG=$(pwd)/my_settings.ini
-          export PATH=$PATH:/home/runner/.local/bin
-
-          # 3. Lanciamo il comando
-          spotify_to_ytmusic all me
+          # Carica i brani "Mi piace"
+          spotify2ytmusic liked
+          
+          # Sincronizza tutte le playlist
+          spotify2ytmusic playlists

@@ -20,16 +20,20 @@ jobs:
         run: pip install spotify-to-ytmusic
 
       - name: Run sync
-        env:
-          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-          YT_COOKIE: ${{ secrets.YT_COOKIE }}
         run: |
           # 1. Aggiungiamo il percorso agli eseguibili
           export PATH=$PATH:/home/runner/.local/bin
           
-          # 2. Setup automatico usando le variabili d'ambiente
-          spotify_to_ytmusic setup --id "$SPOTIFY_CLIENT_ID" --secret "$SPOTIFY_CLIENT_SECRET" --cookie "$YT_COOKIE"
+          # 2. Creiamo il file settings.ini esattamente dove lo vuole lo script
+          # Usiamo le virgolette singole per i segreti per evitare errori con i caratteri speciali
+          cat <<EOF > settings.ini
+          [spotify]
+          client_id = ${{ secrets.SPOTIFY_CLIENT_ID }}
+          client_secret = ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+
+          [youtube]
+          headers_raw = ${{ secrets.YT_COOKIE }}
+          EOF
           
-          # 3. Lanciamo la sincronizzazione usando 'me' come ID
+          # 3. Lanciamo la sincronizzazione puntando al file che abbiamo appena creato
           spotify_to_ytmusic all me
